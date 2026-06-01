@@ -7,7 +7,11 @@ import ScrollPaintReveal from "@/components/ScrollPaintReveal";
 import BeforeAfterSlider from "@/components/BeforeAfterSlider";
 import CTASection from "@/components/CTASection";
 import Placeholder from "@/components/Placeholder";
-import { getProject, getProjectSlugs, projects, type ProjectCategory } from "@/data/projects";
+import ShareButtons from "@/components/ShareButtons";
+import { getAllProjects, getProjectFromStore } from "@/lib/projects-store";
+import type { ProjectCategory } from "@/data/projects";
+
+export const dynamic = "force-dynamic";
 
 const variantByCategory: Record<
   ProjectCategory,
@@ -20,20 +24,21 @@ const variantByCategory: Record<
   Revestimentos: "coating",
 };
 
-export function generateStaticParams() {
-  return getProjectSlugs().map((slug) => ({ slug }));
-}
-
 export function generateMetadata({
   params,
 }: {
   params: { slug: string };
 }): Metadata {
-  const project = getProject(params.slug);
+  const project = getProjectFromStore(params.slug);
   if (!project) return { title: "Obra não encontrada" };
   return {
     title: project.title,
     description: `${project.description} — ${project.service}, ${project.location}.`,
+    openGraph: {
+      title: project.title,
+      description: project.description,
+      images: project.image ? [project.image] : [],
+    },
   };
 }
 
@@ -42,22 +47,26 @@ export default function ObraDetailPage({
 }: {
   params: { slug: string };
 }) {
-  const project = getProject(params.slug);
+  const project = getProjectFromStore(params.slug);
   if (!project) notFound();
 
   const variant = variantByCategory[project.category];
-  const related = projects.filter((p) => p.slug !== project.slug).slice(0, 3);
+  const all = getAllProjects();
+  const related = all.filter((p) => p.slug !== project.slug).slice(0, 3);
 
   return (
     <>
       <article className="shell pt-32 sm:pt-40">
-        <Link
-          href="/obras"
-          className="inline-flex items-center gap-2 font-sans text-[12px] uppercase tracking-wide2 text-ink-faint transition-colors hover:text-ink"
-        >
-          <span aria-hidden>←</span>
-          <span className="paint-underline pb-0.5">Voltar às obras</span>
-        </Link>
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          <Link
+            href="/obras"
+            className="inline-flex items-center gap-2 font-sans text-[12px] uppercase tracking-wide2 text-ink-faint transition-colors hover:text-ink"
+          >
+            <span aria-hidden>←</span>
+            <span className="paint-underline pb-0.5">Voltar às obras</span>
+          </Link>
+          <ShareButtons title={project.title} />
+        </div>
 
         <div className="mt-10 flex flex-wrap items-baseline justify-between gap-4">
           <p className="eyebrow">
@@ -97,39 +106,35 @@ export default function ObraDetailPage({
                 variant={variant}
                 accent={project.accent}
                 className="aspect-[16/9]"
-                label="Imagem da obra · placeholder"
+                label="Imagem da obra"
               />
             )}
           </ScrollPaintReveal>
 
-          {/* 🔁 Galeria: colocar imagens em /public/images/obras/<slug>/ e
-              preencher `images` em /data/projects.ts. */}
           <div className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-3">
-            {(project.images.length > 0
-              ? project.images.slice(0, 3)
-              : [0, 1, 2]
-            ).map((img, i) =>
-              project.images.length > 0 ? (
-                <div
-                  key={i}
-                  className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl"
-                >
-                  <Image
-                    src={img as string}
-                    alt={`${project.title} — ${i + 1}`}
-                    fill
-                    sizes="(max-width: 640px) 50vw, 33vw"
-                    className="object-cover"
+            {(project.images.length > 0 ? project.images.slice(0, 3) : [0, 1, 2]).map(
+              (img, i) =>
+                project.images.length > 0 ? (
+                  <div
+                    key={i}
+                    className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl"
+                  >
+                    <Image
+                      src={img as string}
+                      alt={`${project.title} — ${i + 1}`}
+                      fill
+                      sizes="(max-width: 640px) 50vw, 33vw"
+                      className="object-cover"
+                    />
+                  </div>
+                ) : (
+                  <Placeholder
+                    key={i}
+                    variant={variant}
+                    accent={project.accent}
+                    label={`Detalhe ${i + 1}`}
                   />
-                </div>
-              ) : (
-                <Placeholder
-                  key={i}
-                  variant={variant}
-                  accent={project.accent}
-                  label={`Detalhe ${i + 1}`}
-                />
-              ),
+                ),
             )}
           </div>
         </div>
@@ -138,7 +143,6 @@ export default function ObraDetailPage({
         <section className="mt-20">
           <SectionHeading eyebrow="Antes / Depois" title="A transformação." />
           <div className="mt-10 max-w-3xl">
-            {/* 🔁 Substituir por `before`/`after` reais em /data/projects.ts */}
             <BeforeAfterSlider
               className="aspect-[16/10]"
               before={
@@ -147,7 +151,11 @@ export default function ObraDetailPage({
                     <Image src={project.before} alt="Antes" fill className="object-cover" />
                   </div>
                 ) : (
-                  <Placeholder variant={variant} accent={project.accent} className="grayscale aspect-[16/10]" />
+                  <Placeholder
+                    variant={variant}
+                    accent={project.accent}
+                    className="grayscale aspect-[16/10]"
+                  />
                 )
               }
               after={
@@ -156,7 +164,11 @@ export default function ObraDetailPage({
                     <Image src={project.after} alt="Depois" fill className="object-cover" />
                   </div>
                 ) : (
-                  <Placeholder variant={variant} accent={project.accent} className="aspect-[16/10]" />
+                  <Placeholder
+                    variant={variant}
+                    accent={project.accent}
+                    className="aspect-[16/10]"
+                  />
                 )
               }
             />
@@ -179,8 +191,13 @@ export default function ObraDetailPage({
           ))}
         </section>
 
+        {/* Partilhar (repetido no fundo) */}
+        <div className="mt-16 flex items-center gap-4 border-t border-line pt-10">
+          <ShareButtons title={project.title} />
+        </div>
+
         {/* Relacionadas */}
-        <section className="mt-24">
+        <section className="mt-16">
           <SectionHeading eyebrow="Mais obras" title="Outras transformações." />
           <div className="mt-10 grid gap-x-8 gap-y-10 sm:grid-cols-3">
             {related.map((p) => (

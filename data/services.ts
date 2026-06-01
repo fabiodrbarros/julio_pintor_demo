@@ -37,21 +37,12 @@ export const services: Service[] = [
   },
   {
     slug: "pintura-exterior",
-    title: "Pintura exterior",
-    short: "Exteriores protegidos contra o desgaste e o clima.",
+    title: "Pintura exterior e fachadas",
+    short: "Exteriores protegidos e fachadas que fazem boa impressão.",
     description:
-      "Pintura de paredes exteriores com produtos resistentes à humidade e aos raios solares. Proteção e presença para a fachada da sua casa.",
+      "Pintura de paredes exteriores e fachadas com produtos resistentes à humidade e aos raios solares. Preparação rigorosa, acabamento uniforme e proteção que dura.",
     animation: "facade",
     accent: "orange",
-  },
-  {
-    slug: "pintura-de-fachadas",
-    title: "Pintura de fachadas",
-    short: "A primeira impressão de um edifício, tratada ao detalhe.",
-    description:
-      "Recuperação e pintura de fachadas, com preparação rigorosa e acabamento uniforme. Valorizamos o edifício e protegemos a estrutura.",
-    animation: "facade",
-    accent: "amber",
   },
   {
     slug: "lavagem-de-telhados",

@@ -41,7 +41,10 @@ export default function ServiceAnimationCard({
         <AnimatedServiceIcon animation={service.animation} accent={service.accent} />
       </div>
 
-      <h3 className="font-brand text-2xl font-light uppercase tracking-wide2 text-ink">
+      <h3
+        className="font-brand font-light uppercase tracking-wide2 text-ink"
+        style={{ fontSize: service.title.length > 22 ? "1.1rem" : "1.5rem", lineHeight: 1.2 }}
+      >
         {service.title}
       </h3>
       <p className="mt-4 max-w-sm flex-1 font-sans text-sm font-light leading-relaxed text-ink-soft">

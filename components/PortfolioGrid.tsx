@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import ProjectCard from "./ProjectCard";
-import { projects, projectCategories } from "@/data/projects";
+import { projectCategories, type Project } from "@/data/projects";
 import { cn } from "@/lib/utils";
 
 type Filter = (typeof projectCategories)[number] | "Todas";
@@ -12,7 +12,7 @@ type Filter = (typeof projectCategories)[number] | "Todas";
  * Galeria de obras com filtros por categoria.
  * "Antes/Depois" mostra todas as obras (cada uma é uma transformação).
  */
-export default function PortfolioGrid() {
+export default function PortfolioGrid({ projects }: { projects: Project[] }) {
   const [filter, setFilter] = useState<Filter>("Todas");
   const filters: Filter[] = ["Todas", ...projectCategories];
 

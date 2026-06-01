@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import SectionHeading from "@/components/SectionHeading";
 import PortfolioGrid from "@/components/PortfolioGrid";
 import CTASection from "@/components/CTASection";
+import { getAllProjects } from "@/lib/projects-store";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Obras e Trabalhos Realizados",
@@ -10,6 +13,8 @@ export const metadata: Metadata = {
 };
 
 export default function ObrasPage() {
+  const projects = getAllProjects();
+
   return (
     <>
       <section className="shell pt-36 pb-12 sm:pt-44">
@@ -21,8 +26,7 @@ export default function ObrasPage() {
       </section>
 
       <section className="shell pb-12">
-        {/* 🔁 Estrutura pronta para fotografias reais — ver /data/projects.ts */}
-        <PortfolioGrid />
+        <PortfolioGrid projects={projects} />
       </section>
 
       <CTASection

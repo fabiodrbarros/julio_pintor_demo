@@ -17,7 +17,6 @@ export type PaintAccent = keyof typeof paintHex;
 /** Navegação principal — usada no menu lateral e no footer. */
 export const navLinks: { label: string; href: string }[] = [
   { label: "Início", href: "/" },
-  { label: "Transformações", href: "/transformacoes" },
   { label: "Serviços", href: "/servicos" },
   { label: "Obras", href: "/obras" },
   { label: "Sobre", href: "/sobre" },

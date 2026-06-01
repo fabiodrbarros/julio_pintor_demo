@@ -125,14 +125,11 @@ export default function SideMenu({
                       <Link
                         href={link.href}
                         onClick={onClose}
-                        className="group flex items-baseline gap-3 py-2"
+                        className="group flex items-baseline py-2"
                       >
-                        <span className="font-sans text-[11px] tabular-nums text-ink-faint">
-                          0{i + 1}
-                        </span>
                         <span
                           className={cn(
-                            "paint-underline pb-1 font-brand text-[1.6rem] font-light uppercase tracking-[0.1em] text-ink transition-colors sm:text-[1.9rem]",
+                            "paint-underline pb-1 font-brand text-[1.1rem] font-light uppercase tracking-[0.12em] text-ink transition-colors sm:text-[1.25rem]",
                             active && "[background-size:100%_2px]",
                           )}
                         >
