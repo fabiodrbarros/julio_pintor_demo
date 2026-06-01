@@ -1,7 +1,8 @@
 # Deploy — Júlio Pintor (Docker)
 
-App Next.js (output `standalone`) empacotada em Docker. Imagem final pequena,
-servidor a correr na porta **3000**.
+App Next.js (output `standalone`) empacotada em Docker. O container ouve
+internamente na porta **3000** (porta do Next); no host é publicada na **5001**
+(ver `docker-compose.yml`).
 
 ## Local (testar antes da VPS)
 
@@ -9,9 +10,9 @@ servidor a correr na porta **3000**.
 # build da imagem
 docker build -t julio-pintor:latest .
 
-# correr
-docker run --rm -p 3000:3000 julio-pintor:latest
-# abrir http://localhost:3000
+# correr (host 5001 -> container 3000)
+docker run --rm -p 5001:3000 julio-pintor:latest
+# abrir http://localhost:5001
 ```
 
 Ou com Compose:
@@ -54,10 +55,10 @@ Qualquer alteração ao código exige rebuild (passo seguinte).
 docker compose up -d --build
 ```
 
-A app fica em `http://IP_DA_VPS:3000`.
+A app fica em `http://IP_DA_VPS:5001`.
 
-> Se a porta 3000 estiver ocupada, muda o mapeamento em `docker-compose.yml`
-> (ex.: `"8080:3000"`).
+> Para mudar a porta do host, edita o mapeamento em `docker-compose.yml`
+> (ex.: `"8080:3000"`). O lado direito (3000) é fixo — é a porta interna do Next.
 
 ### 5. Atualizar (sempre que houver mudanças no repo)
 
@@ -72,8 +73,8 @@ docker image prune -f      # limpar imagens antigas (opcional)
 ## Domínio + HTTPS (recomendado)
 
 Coloca um **Nginx** à frente, com certificado Let's Encrypt. A app continua
-só acessível internamente em `127.0.0.1:3000` (muda o mapeamento em
-`docker-compose.yml` para `"127.0.0.1:3000:3000"` por segurança).
+só acessível internamente em `127.0.0.1:5001` (muda o mapeamento em
+`docker-compose.yml` para `"127.0.0.1:5001:3000"` por segurança).
 
 ### Nginx (`/etc/nginx/sites-available/juliopintor`)
 
@@ -83,7 +84,7 @@ server {
     server_name juliopintor.pt www.juliopintor.pt;
 
     location / {
-        proxy_pass         http://127.0.0.1:3000;
+        proxy_pass         http://127.0.0.1:5001;
         proxy_http_version 1.1;
         proxy_set_header   Upgrade $http_upgrade;
         proxy_set_header   Connection 'upgrade';

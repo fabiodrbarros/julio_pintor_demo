@@ -7,8 +7,9 @@ services:
     container_name: julio-pintor
     restart: unless-stopped
     ports:
-      # host:container — mudar a porta do host se a 3000 já estiver ocupada na VPS
-      - "3000:3000"
+      # host:container — o container ouve sempre na 3000 (interna do Next);
+      # aqui publica-se na porta 5001 do host.
+      - "5001:3000"
     environment:
       - NODE_ENV=production
       - NEXT_TELEMETRY_DISABLED=1
