@@ -108,6 +108,36 @@ sudo certbot --nginx -d juliopintor.pt -d www.juliopintor.pt
 
 ---
 
+## Alternativa: Cloudflare Tunnel (Zero Trust)
+
+Em vez de expor portas/Nginx, esta app pode ser servida por um **Cloudflare
+Tunnel** já existente (`cloudflared`). O segredo é os dois containers
+partilharem uma rede Docker, para o `cloudflared` alcançar o site **pelo nome**.
+
+O `docker-compose.yml` já liga o `julio-pintor` à rede externa **`web`**
+(a mesma do `cloudflared`):
+
+```yaml
+networks:
+  proxy:
+    external: true
+    name: web        # rede partilhada com o cloudflared
+```
+
+Depois, no dashboard **one.dash.cloudflare.com → Networks → Tunnels →**
+(o teu túnel) **→ Public Hostnames → Add**:
+
+| Campo | Valor |
+| --- | --- |
+| Subdomain / Domain | ex.: `juliopintor` . `teudominio.pt` |
+| Type | `HTTP` |
+| URL | `julio-pintor:3000` *(porta interna, não a 5001)* |
+
+O DNS e o HTTPS são tratados pelo Cloudflare. Para o site ficar **só**
+acessível pelo túnel, comenta o bloco `ports:` no `docker-compose.yml`.
+
+---
+
 ## Notas
 
 - **Arranque automático:** o `restart: unless-stopped` no Compose faz a app

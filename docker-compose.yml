@@ -6,9 +6,14 @@ services:
     image: julio-pintor:latest
     container_name: julio-pintor
     restart: unless-stopped
+    # Liga-se à rede partilhada "web" para o cloudflared (Cloudflare Tunnel)
+    # o alcançar pelo nome do container: http://julio-pintor:3000
+    networks:
+      - proxy
     ports:
       # host:container — o container ouve sempre na 3000 (interna do Next);
       # aqui publica-se na porta 5001 do host.
+      # Para deixar o site SÓ acessível pelo túnel Cloudflare, comenta este bloco.
       - "5001:3000"
     environment:
       - NODE_ENV=production
@@ -19,3 +24,9 @@ services:
       timeout: 5s
       retries: 3
       start_period: 20s
+
+# Rede partilhada com o cloudflared e os restantes sites (criada fora deste compose).
+networks:
+  proxy:
+    external: true
+    name: web
