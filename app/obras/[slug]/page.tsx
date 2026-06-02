@@ -8,21 +8,10 @@ import BeforeAfterSlider from "@/components/BeforeAfterSlider";
 import CTASection from "@/components/CTASection";
 import Placeholder from "@/components/Placeholder";
 import ShareButtons from "@/components/ShareButtons";
-import { getAllProjects, getProjectFromStore } from "@/lib/projects-store";
-import type { ProjectCategory } from "@/data/projects";
+import { getProjectFromStore } from "@/lib/projects-store";
+import { categoryVariant } from "@/data/projects";
 
 export const dynamic = "force-dynamic";
-
-const variantByCategory: Record<
-  ProjectCategory,
-  "interior" | "facade" | "roof" | "coating"
-> = {
-  Interiores: "interior",
-  Exteriores: "facade",
-  Fachadas: "facade",
-  Telhados: "roof",
-  Revestimentos: "coating",
-};
 
 export function generateMetadata({
   params,
@@ -34,10 +23,14 @@ export function generateMetadata({
   return {
     title: project.title,
     description: `${project.description} — ${project.service}, ${project.location}.`,
+    alternates: { canonical: `/obras/${project.slug}` },
     openGraph: {
+      type: "article",
       title: project.title,
       description: project.description,
-      images: project.image ? [project.image] : [],
+      url: `/obras/${project.slug}`,
+      // Usa a imagem da obra; se não houver, recorre ao logótipo (nunca fica vazio).
+      images: [project.image || "/logo/logo.png"],
     },
   };
 }
@@ -50,9 +43,7 @@ export default function ObraDetailPage({
   const project = getProjectFromStore(params.slug);
   if (!project) notFound();
 
-  const variant = variantByCategory[project.category];
-  const all = getAllProjects();
-  const related = all.filter((p) => p.slug !== project.slug).slice(0, 3);
+  const variant = categoryVariant(project.category);
 
   return (
     <>
@@ -65,7 +56,7 @@ export default function ObraDetailPage({
             <span aria-hidden>←</span>
             <span className="paint-underline pb-0.5">Voltar às obras</span>
           </Link>
-          <ShareButtons title={project.title} />
+          <ShareButtons />
         </div>
 
         <div className="mt-10 flex flex-wrap items-baseline justify-between gap-4">
@@ -191,35 +182,6 @@ export default function ObraDetailPage({
           ))}
         </section>
 
-        {/* Partilhar (repetido no fundo) */}
-        <div className="mt-16 flex items-center gap-4 border-t border-line pt-10">
-          <ShareButtons title={project.title} />
-        </div>
-
-        {/* Relacionadas */}
-        <section className="mt-16">
-          <SectionHeading eyebrow="Mais obras" title="Outras transformações." />
-          <div className="mt-10 grid gap-x-8 gap-y-10 sm:grid-cols-3">
-            {related.map((p) => (
-              <Link key={p.slug} href={`/obras/${p.slug}`} className="group block">
-                <div className="overflow-hidden rounded-2xl">
-                  <div className="transition-transform duration-700 ease-paint group-hover:scale-[1.04]">
-                    <Placeholder
-                      variant={variantByCategory[p.category]}
-                      accent={p.accent}
-                    />
-                  </div>
-                </div>
-                <h3 className="mt-4 font-brand text-base font-light uppercase tracking-wide2 text-ink">
-                  {p.title}
-                </h3>
-                <p className="mt-1 font-sans text-[12px] uppercase tracking-wide2 text-ink-faint">
-                  {p.category} · {p.location}
-                </p>
-              </Link>
-            ))}
-          </div>
-        </section>
       </article>
 
       <CTASection

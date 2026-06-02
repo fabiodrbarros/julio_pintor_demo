@@ -132,8 +132,8 @@ export default function SobrePage() {
       <CTASection
         title="Vamos dar presença ao seu espaço?"
         subtitle="Conte-nos o que tem em mãos. O resto, tratamos nós."
-        secondaryLabel="Ver transformações"
-        secondaryHref="/transformacoes"
+        secondaryLabel="Ver obras"
+        secondaryHref="/obras"
       />
     </>
   );

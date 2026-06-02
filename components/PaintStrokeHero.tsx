@@ -86,40 +86,39 @@ export default function PaintStrokeHero() {
         </div>
       </div>
 
-      {/* indicador de scroll — gota de tinta a escorrer */}
+      {/* indicador de scroll — gota de tinta (estável, com bob suave) */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2, duration: 1 }}
-        className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 sm:block"
+        className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-3 sm:flex"
         aria-hidden
       >
-        <svg width="18" height="48" viewBox="0 0 18 48" fill="none">
-          {/* corpo da gota */}
-          <motion.path
-            d="M9 2 C9 2 3 12 3 20 a6 6 0 0 0 12 0 C15 12 9 2 9 2 Z"
-            fill="url(#dropGrad)"
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-          />
-          {/* escorrido — linha que cresce e desaparece */}
-          <motion.line
-            x1="9" y1="28" x2="9" y2="46"
-            stroke="url(#dropGrad)"
-            strokeWidth="2"
-            strokeLinecap="round"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: [0, 1, 1, 0], opacity: [0, 1, 1, 0] }}
-            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut", times: [0, 0.4, 0.7, 1] }}
-          />
+        <motion.svg
+          width="28"
+          height="40"
+          viewBox="0 0 28 40"
+          fill="none"
+          animate={{ y: [0, 5, 0] }}
+          transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+        >
           <defs>
-            <linearGradient id="dropGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#FF2E93" />
-              <stop offset="60%" stopColor="#8B3DD6" />
-              <stop offset="100%" stopColor="#4F6BF0" stopOpacity="0.3" />
+            <linearGradient id="dripGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#FF6A2B" />
+              <stop offset="42%" stopColor="#FF2E93" />
+              <stop offset="100%" stopColor="#8B3DD6" />
             </linearGradient>
           </defs>
-        </svg>
+          {/* gota estável (sem piscar) */}
+          <path
+            d="M14 3 C14 3 4 17 4 26 a10 10 0 0 0 20 0 C24 17 14 3 14 3 Z"
+            fill="url(#dripGrad)"
+          />
+        </motion.svg>
+
+        <span className="font-sans text-[10px] uppercase tracking-[0.3em] text-ink-faint">
+          Scroll
+        </span>
       </motion.div>
     </section>
   );

@@ -14,12 +14,10 @@
  * gráficos elegantes (gradientes + linhas), nunca stock photos.
  */
 
-export type ProjectCategory =
-  | "Interiores"
-  | "Exteriores"
-  | "Telhados"
-  | "Fachadas"
-  | "Revestimentos";
+import { services } from "./services";
+
+/** Categoria de obra = título de um serviço disponível (ver data/services.ts). */
+export type ProjectCategory = string;
 
 export interface Project {
   slug: string;
@@ -42,20 +40,38 @@ export interface Project {
   after?: string;
 }
 
-export const projectCategories: (ProjectCategory | "Antes/Depois")[] = [
-  "Interiores",
-  "Exteriores",
-  "Telhados",
-  "Fachadas",
-  "Revestimentos",
-  "Antes/Depois",
-];
+// Fonte única de categorias = os SERVIÇOS disponíveis (mesma lista de /servicos).
+// Usada nos filtros de /obras E no formulário de admin.
+export const projectCategories: ProjectCategory[] = services.map((s) => s.title);
+
+// Mapa categoria (serviço) -> variante do placeholder gráfico.
+const VARIANT_BY_CATEGORY: Record<
+  string,
+  "interior" | "facade" | "roof" | "coating" | "generic"
+> = {
+  "Pintura interior": "interior",
+  "Pintura exterior e fachadas": "facade",
+  "Lavagem de telhados": "roof",
+  "Impermeabilização de telhados": "roof",
+  Revestimentos: "coating",
+  Acabamentos: "interior",
+  Remodelações: "interior",
+  "Obras novas": "facade",
+  "Manutenção e recuperação": "generic",
+};
+
+/** Variante do placeholder gráfico para uma categoria (com fallback). */
+export function categoryVariant(
+  category: string,
+): "interior" | "facade" | "roof" | "coating" | "generic" {
+  return VARIANT_BY_CATEGORY[category] ?? "generic";
+}
 
 export const projects: Project[] = [
   {
     slug: "pintura-exterior-moradia",
     title: "Pintura exterior em moradia",
-    category: "Exteriores",
+    category: "Pintura exterior e fachadas",
     location: "Arcos de Valdevez",
     description:
       "Renovação completa da pintura exterior de uma moradia, com proteção reforçada contra a humidade.",
@@ -75,7 +91,7 @@ export const projects: Project[] = [
   {
     slug: "renovacao-de-interiores",
     title: "Renovação de interiores",
-    category: "Interiores",
+    category: "Pintura interior",
     location: "Viana do Castelo",
     description:
       "Pintura interior de uma habitação, com preparação cuidada de paredes e tetos.",
@@ -95,7 +111,7 @@ export const projects: Project[] = [
   {
     slug: "lavagem-impermeabilizacao-telhado",
     title: "Lavagem e impermeabilização de telhado",
-    category: "Telhados",
+    category: "Lavagem de telhados",
     location: "Arcos de Valdevez",
     description:
       "Remoção de musgo e aplicação de camada impermeabilizante para travar infiltrações.",
@@ -115,7 +131,7 @@ export const projects: Project[] = [
   {
     slug: "acabamentos-obra-nova",
     title: "Acabamentos em obra nova",
-    category: "Interiores",
+    category: "Obras novas",
     location: "Ponte da Barca",
     description:
       "Pintura e acabamentos finais de uma construção nova, do reboco ao detalhe.",
@@ -135,7 +151,7 @@ export const projects: Project[] = [
   {
     slug: "revestimento-pintura-fachada",
     title: "Revestimento e pintura de fachada",
-    category: "Fachadas",
+    category: "Revestimentos",
     location: "Arcos de Valdevez",
     description:
       "Aplicação de revestimento texturado e pintura de fachada para proteção e carácter.",
@@ -155,7 +171,7 @@ export const projects: Project[] = [
   {
     slug: "pintura-interior-comercial",
     title: "Pintura de espaço comercial",
-    category: "Interiores",
+    category: "Pintura interior",
     location: "Viana do Castelo",
     description:
       "Pintura interior de um espaço comercial, com planeamento para minimizar a paragem da atividade.",

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import SectionHeading from "@/components/SectionHeading";
 import ContactForm from "@/components/ContactForm";
-import { company } from "@/data/company";
+import { company, telHref, mailHref } from "@/data/company";
 
 export const metadata: Metadata = {
   title: "Contactar Júlio Pintor | Pedir Orçamento",
@@ -27,6 +27,25 @@ export default function ContactosPage() {
               <p className="font-sans text-base font-light text-ink">
                 {company.location}
               </p>
+            </div>
+
+            <div>
+              <p className="eyebrow mb-3">Contactos diretos</p>
+              <ul className="space-y-2.5 font-sans text-base font-light text-ink">
+                <li>
+                  <a href={mailHref} className="paint-underline pb-0.5">
+                    {company.email}
+                  </a>
+                </li>
+                <li className="flex flex-wrap items-baseline gap-x-2">
+                  <a href={telHref} className="paint-underline pb-0.5">
+                    {company.phoneDisplay}
+                  </a>
+                  <span className="text-[11px] font-light text-ink-faint">
+                    ({company.phoneNote})
+                  </span>
+                </li>
+              </ul>
             </div>
 
             <div className="rounded-3xl border border-line p-8">

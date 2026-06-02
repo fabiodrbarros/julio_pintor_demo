@@ -5,19 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Placeholder from "./Placeholder";
-import type { Project, ProjectCategory } from "@/data/projects";
+import { categoryVariant, type Project } from "@/data/projects";
 import { easePaint } from "@/lib/animations";
-
-const variantByCategory: Record<
-  ProjectCategory,
-  "interior" | "facade" | "roof" | "coating"
-> = {
-  Interiores: "interior",
-  Exteriores: "facade",
-  Fachadas: "facade",
-  Telhados: "roof",
-  Revestimentos: "coating",
-};
 
 const ProjectCard = forwardRef<HTMLElement, { project: Project }>(
   function ProjectCard({ project }, ref) {
@@ -48,7 +37,7 @@ const ProjectCard = forwardRef<HTMLElement, { project: Project }>(
               </div>
             ) : (
               <Placeholder
-                variant={variantByCategory[project.category]}
+                variant={categoryVariant(project.category)}
                 accent={project.accent}
                 rounded="rounded-2xl"
               />

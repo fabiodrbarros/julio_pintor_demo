@@ -5,7 +5,14 @@ import {
   company,
   hasInstagram,
   hasFacebook,
+  hasEmail,
+  hasPhone,
+  mailHref,
+  telHref,
 } from "@/data/company";
+
+// URL nacional do Livro de Reclamações eletrónico.
+const LIVRO_RECLAMACOES_URL = "https://www.livroreclamacoes.pt/inicio";
 
 /** Footer minimalista, alinhado ao logótipo. */
 export default function FooterMinimal() {
@@ -29,7 +36,7 @@ export default function FooterMinimal() {
         </div>
 
         {/* Navegação */}
-        <nav className="md:col-span-4" aria-label="Rodapé">
+        <nav className="md:col-span-3" aria-label="Rodapé">
           <p className="eyebrow mb-5">Navegação</p>
           <ul className="space-y-3">
             {navLinks.map((link) => (
@@ -46,7 +53,7 @@ export default function FooterMinimal() {
         </nav>
 
         {/* Redes sociais */}
-        <div className="md:col-span-3">
+        <div className="md:col-span-4">
           <p className="eyebrow mb-5">Seguir</p>
           {hasInstagram || hasFacebook ? (
             <ul className="space-y-3">
@@ -81,13 +88,53 @@ export default function FooterMinimal() {
               Instagram · Facebook
             </p>
           )}
+
+          {/* Contactos */}
+          {(hasEmail || hasPhone) && (
+            <div className="mt-8">
+              <p className="eyebrow mb-3">Contactos</p>
+              <ul className="space-y-2">
+                {hasEmail && (
+                  <li>
+                    <a
+                      href={mailHref}
+                      className="paint-underline pb-0.5 font-sans text-sm font-light text-ink-soft transition-colors hover:text-ink"
+                    >
+                      {company.email}
+                    </a>
+                  </li>
+                )}
+                {hasPhone && (
+                  <li className="flex items-baseline gap-x-2 whitespace-nowrap">
+                    <a
+                      href={telHref}
+                      className="paint-underline pb-0.5 font-sans text-sm font-light text-ink-soft transition-colors hover:text-ink"
+                    >
+                      {company.phoneDisplay}
+                    </a>
+                    <span className="text-[10px] font-light text-ink-faint">
+                      ({company.phoneNote})
+                    </span>
+                  </li>
+                )}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="shell flex flex-col gap-2 border-t border-line py-6 sm:flex-row sm:items-center sm:justify-between">
+      <div className="shell flex flex-col items-center gap-3 border-t border-line py-6 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
         <p className="font-sans text-[12px] text-ink-faint">
           © {year} {company.name}
         </p>
+        <a
+          href={LIVRO_RECLAMACOES_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="paint-underline pb-0.5 font-sans text-[12px] text-ink-soft transition-colors hover:text-ink"
+        >
+          Livro de Reclamações
+        </a>
         <p className="font-sans text-[11px] uppercase tracking-[0.28em] text-ink-faint">
           Damos cor, proteção e vida a cada superfície
         </p>

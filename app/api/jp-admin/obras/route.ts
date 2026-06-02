@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAuthenticated } from "@/lib/admin-auth";
-import { getAllProjects, addProjectToStore } from "@/lib/projects-store";
+import {
+  getAllProjects,
+  addProjectToStore,
+  makeUniqueSlug,
+} from "@/lib/projects-store";
+import { slugify } from "@/lib/utils";
 import type { Project } from "@/data/projects";
 
 export async function GET() {
@@ -17,15 +22,25 @@ export async function POST(req: NextRequest) {
   try {
     const data = (await req.json()) as Project;
 
-    if (!data.slug || !data.title || !data.category) {
+    if (!data.title || !data.category) {
       return NextResponse.json(
-        { error: "Campos obrigatórios em falta (title, slug, category)" },
+        { error: "Campos obrigatórios em falta (título, categoria)" },
         { status: 400 },
       );
     }
 
-    addProjectToStore(data);
-    return NextResponse.json({ ok: true, slug: data.slug }, { status: 201 });
+    // O URL é automático: gerado a partir do título e garantido único.
+    const base = slugify(data.title);
+    if (!base) {
+      return NextResponse.json(
+        { error: "O título não gera um URL válido. Use letras ou números." },
+        { status: 400 },
+      );
+    }
+    const slug = makeUniqueSlug(base);
+
+    addProjectToStore({ ...data, slug });
+    return NextResponse.json({ ok: true, slug }, { status: 201 });
   } catch {
     return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
   }

@@ -87,7 +87,7 @@ app/
 
 | Ficheiro | O quê |
 |---|---|
-| `data/company.ts` | Contactos reais (tel, email, WhatsApp, IG, FB) — **ainda por preencher** |
+| `data/company.ts` | Contactos: tel/email/WhatsApp **preenchidos**; Instagram/Facebook por preencher |
 | `data/services.ts` | 9 serviços (Pintura exterior e fachadas foram fundidos) |
 | `data/projects.ts` | Obras estáticas (dados de estrutura, NÃO reais) |
 | `data/projects-runtime.json` | Obras adicionadas pelo admin — **persistente, montar como volume Docker** |
@@ -180,3 +180,47 @@ docker compose up -d --build
 - Fonte Josefin Sans suporta "Ú" (JÚLIO).
 - `PortfolioGrid` recebe `projects` como prop (não importa diretamente do store).
 - `ServicesCarousel` mostra 3 cards/desktop, 2/tablet, 1/mobile — drag + dots + setas.
+
+---
+
+## 12. Atualizações recentes
+
+### Admin: editar + apagar QUALQUER obra
+- Store em modelo *overlay* (`lib/projects-store.ts`): `projects-runtime.json` é agora
+  `{ "projects": [], "deleted": [] }`. Editar estática = override; apagar estática = tombstone.
+- Formulário reutilizável `app/jp-guest-admin/ObraForm.tsx` (criar + editar).
+- Página nova `app/jp-guest-admin/editar/[slug]/page.tsx`; API `PUT /api/jp-admin/obras/[slug]`.
+- Dashboard: **Editar** + **Apagar** em todas as linhas; badge Estática / Editada / Admin.
+- Ao editar, o slug/URL mantém-se; imagens só mudam se enviares novas.
+
+### Categorias = Serviços
+- `projectCategories` é derivado de `services` (`data/projects.ts`): as categorias de obras
+  são exatamente os serviços de /servicos (filtros de /obras + select do admin).
+- Helper `categoryVariant()` mapeia categoria → variante do placeholder gráfico.
+- Removida a categoria "Antes/Depois".
+
+### /obras — filtros laterais
+- Filtros em coluna vertical à esquerda (sticky no desktop), obras ao lado.
+- Estilo: texto por linha + linha divisória; selecionado a escuro + ponto de tinta.
+
+### Contactos (PREENCHIDOS em `data/company.ts`)
+- email `geral@juliopintor.pt` · tel `+351 963 171 265` (nota: "Chamada para rede móvel
+  nacional", campo `phoneNote`) · whatsapp `351963171265` (mesmo número).
+- Bloco "Contactos diretos" em /contactos; contactos também no footer.
+- **Instagram/Facebook ainda por preencher.**
+
+### Footer
+- Link **Livro de Reclamações** (livroreclamacoes.pt/inicio) ao centro da barra inferior.
+- Contactos (email + telefone c/ nota na mesma linha) por baixo do "Seguir".
+- Larguras de coluna ajustadas (Navegação 3, Seguir/Contactos 4).
+
+### Página de obra (detalhe)
+- Removida a secção "Mais obras / Outras transformações".
+- Partilha **só no topo**; `ShareButtons` = **Facebook + copiar link** (sem WhatsApp).
+- Open Graph completo (og:title/description/url/type + og:image com fallback p/ logótipo).
+  ⚠️ Preview do Facebook só funciona com o site **público** (o FB não lê localhost) e com
+  `metadataBase` (em `app/layout.tsx`) no domínio real. Testar no Facebook Sharing Debugger.
+
+### Outros
+- Indicador de scroll do hero: gota de tinta **estável** (sem piscar), maior + "SCROLL".
+- `/sobre`: botão "Ver transformações" corrigido → "Ver obras" (`/obras`).

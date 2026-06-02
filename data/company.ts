@@ -15,14 +15,16 @@ export const company = {
   shortPitch: "Damos cor, proteção e vida a cada superfície.",
   location: "Arcos de Valdevez, Viana do Castelo",
 
-  // --- Contactos (PREENCHER) ---------------------------------
+  // --- Contactos ---------------------------------------------
   // Telefone para apresentar no site (formato livre).
-  phoneDisplay: "", // ex.: "+351 900 000 000"
+  phoneDisplay: "+351 963 171 265",
+  // Nota legal de tarifário (telemóvel nacional).
+  phoneNote: "Chamada para rede móvel nacional",
   // Telefone para o link tel: (apenas dígitos e +).
-  phone: "", // ex.: "+351900000000"
-  email: "", // ex.: "geral@juliopintor.pt"
-  // Número internacional para o WhatsApp, só dígitos. ex.: "351900000000"
-  whatsapp: "",
+  phone: "+351963171265",
+  email: "geral@juliopintor.pt",
+  // Número internacional para o WhatsApp, só dígitos.
+  whatsapp: "351963171265",
   whatsappMessage: "Olá! Gostaria de pedir um orçamento de pintura.",
 
   // --- Redes sociais (PREENCHER com URLs completos) ----------
