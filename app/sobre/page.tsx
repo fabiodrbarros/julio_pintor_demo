@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import SectionHeading from "@/components/SectionHeading";
 import ScrollPaintReveal from "@/components/ScrollPaintReveal";
 import CTASection from "@/components/CTASection";
-import PaintRing from "@/components/PaintRing";
 import { company } from "@/data/company";
 
 export const metadata: Metadata = {
@@ -60,8 +60,15 @@ export default function SobrePage() {
               }
             />
           </div>
-          <div className="flex justify-center lg:col-span-5">
-            <PaintRing className="w-[clamp(180px,32vw,320px)] h-auto" />
+          <div className="flex justify-center lg:col-span-5 lg:justify-end">
+            <Image
+              src="/logo/logo.png"
+              alt={company.brandName}
+              width={2172}
+              height={724}
+              priority
+              className="h-auto w-[clamp(240px,42vw,440px)]"
+            />
           </div>
         </div>
       </section>

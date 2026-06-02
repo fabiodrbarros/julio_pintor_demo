@@ -1,10 +1,17 @@
 import Link from "next/link";
-import PaintRing from "@/components/PaintRing";
+import Image from "next/image";
 
 export default function NotFound() {
   return (
     <section className="shell flex min-h-[70vh] flex-col items-center justify-center py-32 text-center">
-      <PaintRing className="w-40 h-auto" />
+      <Image
+        src="/logo/logo.png"
+        alt="Júlio Pintor"
+        width={2172}
+        height={724}
+        priority
+        className="h-auto w-64"
+      />
       <p className="eyebrow mt-10">Erro 404</p>
       <h1 className="mt-4 font-brand text-3xl font-light uppercase tracking-wide2 text-ink">
         Esta superfície ainda não foi pintada.
