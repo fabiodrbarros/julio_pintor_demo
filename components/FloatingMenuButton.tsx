@@ -1,12 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import PaintRing from "./PaintRing";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 /**
  * Botão flutuante discreto no lado direito (a meio do ecrã).
- * Usa o "C" de tinta do logótipo (PaintRing) como ícone.
+ * Usa o "C" do logótipo (recorte de logo.png) como ícone.
  */
 export default function FloatingMenuButton({
   onOpen,
@@ -37,7 +37,13 @@ export default function FloatingMenuButton({
         "hover:scale-110 hover:border-transparent hover:shadow-[0_8px_32px_rgba(255,46,147,0.18)]",
       )}
     >
-      <PaintRing size={38} strokeWidth={28} className="shrink-0" />
+      <Image
+        src="/logo/logo-mark.png"
+        alt=""
+        width={44}
+        height={44}
+        className="h-9 w-9 shrink-0 object-contain"
+      />
     </motion.button>
   );
 }
